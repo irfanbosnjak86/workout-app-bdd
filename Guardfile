@@ -45,15 +45,6 @@ guard :rspec, cmd: "bin/rspec" do
   dsl.watch_spec_files_for(rails.app_files)
   dsl.watch_spec_files_for(rails.views)
   
-  #setup for BDD course 
-  
-  # watch(%r{^app/models/(.+)\.rb$}) { |m| "spec/features/" }
-  # watch(%r{^app/controllers/(.+)_(controller)\.rb$}) { |m| "spec/features/#{m[1]}" }
-  # watch(rails.routes)          { "#{rspec.spec_dir}" }
-
-  watch(%r{^app/controllers/(.+)_(controller)\.rb$})  { "spec/features" }
-  watch(%r{^app/models/(.+)\.rb$})  { "spec/features" }
-  
   watch(rails.controllers) do |m|
     [
       rspec.spec.call("routing/#{m[1]}_routing"),
@@ -61,7 +52,12 @@ guard :rspec, cmd: "bin/rspec" do
       rspec.spec.call("acceptance/#{m[1]}")
     ]
   end
-
+  
+  watch(%r{^app/models/(.+)\.rb$}) { |m| "spec/features/#{m[1]}s" }
+  watch(%r{^app/controllers/(.+)_(controller)\.rb$}) { "spec/features/" }
+  watch(rails.view_dirs) { |m| "spec/features/#{m[1]}" }
+  watch(rails.routes)          { "#{rspec.spec_dir}" }
+  
   # Rails config changes
   watch(rails.spec_helper)     { rspec.spec_dir }
   watch(rails.routes)          { "#{rspec.spec_dir}/routing" }
