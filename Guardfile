@@ -54,9 +54,10 @@ guard :rspec, cmd: "bin/rspec" do
   end
   
   watch(%r{^app/models/(.+)\.rb$}) { |m| "spec/features/#{m[1]}s" }
-  watch(%r{^app/controllers/(.+)_(controller)\.rb$}) { "spec/features/" }
+  watch(%r{^app/controllers/(.+)_(controller)\.rb$}) { "spec/features/#{m[1]}s" }
   watch(rails.view_dirs) { |m| "spec/features/#{m[1]}" }
   watch(rails.routes)          { "#{rspec.spec_dir}" }
+   watch(%r{^app/views/layouts/application.html.erb$}) { "spec/features/" }
   
   # Rails config changes
   watch(rails.spec_helper)     { rspec.spec_dir }
