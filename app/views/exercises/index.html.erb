@@ -1,4 +1,6 @@
-<div class="col-md-7 col-xs-12">
+<% content_for(:whole_page) do %>
+
+  <div class="col-md-7 col-xs-12">
     <% unless @exercises.empty? %>
       <h1>Listing Exercises</h1>
 
@@ -38,38 +40,39 @@
     <% end %>
     <%= link_to 'New workout', new_user_exercise_path(current_user),
         class: "btn btn-success link" %>
-        
-    <%= content_tag :div, "", id: "chart", data: { workouts: @exercises } %>
+
+      <%= content_tag :div, "", id: "chart", data: { workouts: @exercises } %>
   </div>
-  
+
   <div class="col-md-5 col-xs-12">
     <div id="chat-window" class="col-md-12">
       <header class="text-center">
         Channel: <%= current_room.name %>
       </header>
-    </div>
-    
-    <div class="col-md-2" id="followers">
-      <% @followers.each do |follower| %>
-        <%= link_to follower.user.full_name, user_exercises_path(current_user, roomId: follower.user.room.id), class: 'followers' %>
-        <br />
-      <% end %>
-    </div>
-  
-    <div class="col-md-10" id="messages-box">
-      <div id="chat-box" data-channel="rooms" data-room-id=<%= current_room.id %>>
-        <% @messages.each do |message| %>
-          <%= render partial: 'shared/message', locals: { message: message } %>
+
+      <div class="col-md-2" id="followers">
+        <% @followers.each do |follower| %>
+          <%= link_to follower.user.full_name, user_exercises_path(current_user, roomId: follower.user.room.id), class: 'followers' %>
+          <br />
         <% end %>
       </div>
+
+      <div class="col-md-10" id="messages-box">
+        <div id="chat-box" data-channel="rooms" data-room-id=<%= current_room.id %>>
+          <% @messages.each do |message| %>
+            <%= render partial: 'shared/message', locals: { message: message } %>
+          <% end %>
+        </div>
+
+        <div id="form-box">
+          <%= form_for @message, remote: true do |f| %>
+            <%= f.text_field :body, id: "message-field", class: "form-control pull-left" %>
+            <%= f.submit "Send", class: "btn btn-default", id: "post-btn" %>
+          <% end %>
+        </div>
+      </div>
     </div>
-    <div id="form-box">
-      <%= form_for @message do |f| %>
-        <%= f.text_field :body, id: "message-field", class: "form-control pull-left" %>
-        <%= f.submit "Send", class: "btn btn-default", id: "post-btn" %>
-      <% end %>
-    </div>
-    
+
     <h1 class="text-center">My Friends</h1>
 
     <% @friends.each do |friend| %>
@@ -87,3 +90,5 @@
       </div>
     <% end %>
   </div>
+
+<% end %>
